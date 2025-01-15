@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const CusInput = ({
 	name,
@@ -14,6 +14,15 @@ const CusInput = ({
 	disabled,
 	icon,
 }) => {
+	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+	// Toggle password visibility
+	const togglePasswordVisibility = () => {
+		setIsPasswordVisible((prev) => !prev);
+	};
+
+	const isPasswordField = type === 'password';
+
 	return (
 		<div className='w-full flex flex-col gap-1'>
 			<label
@@ -41,9 +50,18 @@ const CusInput = ({
 					onBlur={onBlur}
 					value={value}
 					placeholder={placeholder}
-					type={type}
+					type={isPasswordField && isPasswordVisible ? 'text' : type}
 					disabled={disabled}
 				/>
+
+				{isPasswordField && (
+					<div
+						onClick={togglePasswordVisibility}
+						className='pr-3 cursor-pointer text-gray-500'
+					>
+						{isPasswordVisible ? '🙈' : '👁️'}
+					</div>
+				)}
 			</div>
 
 			{touch && error ? (
