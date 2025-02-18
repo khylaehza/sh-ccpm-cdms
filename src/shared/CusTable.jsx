@@ -2,40 +2,46 @@
 import { useState } from 'react';
 import { useData } from '../DataContext';
 import moment from 'moment';
-// import CusAlert from './CusAlert';
+import CusAlert from './CusAlert';
 
 const CusTable = ({
 	columns,
 	rows,
 	tableName,
 	setCurRow,
-	setEditBook,
+	setEdit,
 	action = true,
 }) => {
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
 	const [deleteOpen, setOpenDelete] = useState(false);
 	const [deleteItems, setDeleteItems] = useState(false);
-	// const { deleteItem, addItem, books, editItem } = useData();
+	const { deleteItem, addItem, editItem } = useData();
 	const [itemId, setItemId] = useState(null);
 	const [tblName, setTableName] = useState(null);
 	const [imageUrl, setImageUrl] = useState(null);
 
 	const onEdit = (row) => {
 		setCurRow(row);
-		setEditBook(true);
+		setEdit(true);
 	};
 
 	const onDelete = (row) => {
 		const { key: itemId, image } = row;
 		const imageUrl = image || null;
 
+		console.log(itemId, image);
 		setItemId(itemId);
 		setTableName(tableName);
 		setImageUrl(imageUrl);
 
 		setDeleteItems(row);
 		setOpenDelete(true);
+	};
+
+	const handleDelete = () => {
+		deleteItem(itemId, tblName, imageUrl);
+		setOpenDelete(false);
 	};
 
 	return (
@@ -115,7 +121,7 @@ const CusTable = ({
 											<div className='flex flex-col gap-2 justify-center'>
 												<button
 													onClick={() => onEdit(row)}
-													className='bg-yellow-200 p-2 rounded-full hover:bg-yellow-300 flex flex-row gap-1 items-center'
+													className='bg-orange-200 p-2 rounded-full hover:bg-orange-300 flex flex-row gap-1 items-center'
 												>
 													<svg
 														xmlns='http://www.w3.org/2000/svg'
@@ -170,13 +176,14 @@ const CusTable = ({
 				openImage={openImg}
 				setOpenImage={setOpenImg}
 			/>
+			*/}
 			<CusAlert
 				open={deleteOpen}
 				setOpen={setOpenDelete}
 				title='Confirm Deletion'
 				content='Are you sure you want to delete this item?'
 				onConfirm={handleDelete}
-			/> */}
+			/>
 		</div>
 	);
 };

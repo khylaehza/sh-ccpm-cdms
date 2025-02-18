@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { LoginPage, UserRegistrationPage } from './pages';
+import { LoginPage, UserRegistrationPage, GeneralDepPage } from './pages';
 
 const RoutesNav = () => {
 	return (
@@ -12,6 +12,10 @@ const RoutesNav = () => {
 				<Route
 					path='/registration'
 					element={<UserRegistrationPage />}
+				/>
+				<Route
+					path='/general'
+					element={<GeneralDepPage />}
 				/>
 			</Routes>
 		</Router>
