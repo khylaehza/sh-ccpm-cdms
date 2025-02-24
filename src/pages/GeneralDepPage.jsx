@@ -12,16 +12,20 @@ const GeneralDepPage = () => {
 	const [showEditGeneralDep, setEditGeneralDep] = useState(false);
 
 	const columns = [
-		{ key: 'created_at', label: 'Created At' },
+		{ key: 'created_at', label: 'Created At', type: 'time' },
 		{ key: 'project_name', label: 'Project Name' },
-		{ key: 'project_briefing', label: 'Project Briefing' },
-		{ key: 'costing', label: 'Costing' },
-		{ key: 'quotation', label: 'Quotation' },
-		{ key: 'client_po', label: 'Client PO' },
-		{ key: 'pur_of_raw_materials', label: 'Purchase of Raw Materials' },
-		{ key: 'dr', label: 'DR' },
-		{ key: 'sl', label: 'SL' },
-		{ key: 'cr', label: 'CR' },
+		{ key: 'project_briefing', label: 'Project Briefing', type: 'pdf' },
+		{ key: 'costing', label: 'Costing', type: 'pdf' },
+		{ key: 'quotation', label: 'Quotation', type: 'pdf' },
+		{ key: 'client_po', label: 'Client PO', type: 'pdf' },
+		{
+			key: 'pur_of_raw_materials',
+			label: 'Purchase of Raw Materials',
+			type: 'pdf',
+		},
+		{ key: 'dr', label: 'DR', type: 'pdf' },
+		{ key: 'sl', label: 'SL', type: 'pdf' },
+		{ key: 'cr', label: 'CR', type: 'pdf' },
 	];
 
 	const rows =

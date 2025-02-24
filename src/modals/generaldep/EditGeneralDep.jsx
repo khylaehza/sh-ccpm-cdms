@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { CusModal } from '../../shared';
-import { UsersForm } from '../../forms';
+import { GeneralDepForm } from '../../forms';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useData } from '../../DataContext';
@@ -39,9 +39,9 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 			const existingImageUrl = imageFile ? curRow.image : null;
 
 			editItem(
+				tableName,
 				itemId,
 				updatedItem,
-				tableName,
 				newImageFile,
 				existingImageUrl
 			);
@@ -57,7 +57,7 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 			<CusModal
 				btnLabel={'Edit'}
 				content={
-					<UsersForm
+					<GeneralDepForm
 						form={editForm}
 						handleImage={OnImgChange}
 					/>

@@ -10,9 +10,14 @@ const AddGeneralDep = () => {
 	const [showAddGeneralDep, setAddGeneralDep] = useState(false);
 	const [pdfFiles, setPdfFiles] = useState({});
 
-	const handlePdfChange = (event, field) => {
-		console.log('sample', event, field);
-		setPdfFiles({ ...pdfFiles, [field]: event.target.files[0] });
+	const handlePdfChange = (event) => {
+		const { name, files } = event.target;
+		if (files.length > 0) {
+			setPdfFiles((prevFiles) => ({
+				...prevFiles,
+				[name]: files[0],
+			}));
+		}
 	};
 
 	const { addItem } = useData();
@@ -31,6 +36,7 @@ const AddGeneralDep = () => {
 			cr: null,
 		},
 		onSubmit: (values, actions) => {
+			console.log(values, pdfFiles);
 			addItem(values, 'generalDep', null, pdfFiles);
 			actions.resetForm();
 			setPdfFiles({});

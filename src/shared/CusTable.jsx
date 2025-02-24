@@ -1,8 +1,13 @@
-// import CusImgViewer from './CusImgViewer';
 import { useState } from 'react';
+import { Document, Page, pdfjs } from 'react-pdf';
 import { useData } from '../DataContext';
 import moment from 'moment';
 import CusAlert from './CusAlert';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+	'../node_modules/pdfjs-dist/build/pdf.worker.min.js',
+	import.meta.url
+).toString();
 
 const CusTable = ({
 	columns,
@@ -15,11 +20,15 @@ const CusTable = ({
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
 	const [deleteOpen, setOpenDelete] = useState(false);
-	const [deleteItems, setDeleteItems] = useState(false);
-	const { deleteItem, addItem, editItem } = useData();
+	const { deleteItem } = useData();
 	const [itemId, setItemId] = useState(null);
 	const [tblName, setTableName] = useState(null);
 	const [imageUrl, setImageUrl] = useState(null);
+
+	// PDF Viewer State
+	const [pdfUrl, setPdfUrl] = useState(null);
+	const [openPdf, setOpenPdf] = useState(false);
+	const [numPages, setNumPages] = useState(null);
 
 	const onEdit = (row) => {
 		setCurRow(row);
@@ -30,12 +39,10 @@ const CusTable = ({
 		const { key: itemId, image } = row;
 		const imageUrl = image || null;
 
-		console.log(itemId, image);
 		setItemId(itemId);
 		setTableName(tableName);
 		setImageUrl(imageUrl);
 
-		setDeleteItems(row);
 		setOpenDelete(true);
 	};
 
@@ -44,14 +51,15 @@ const CusTable = ({
 		setOpenDelete(false);
 	};
 
+	console.log(pdfUrl);
 	return (
 		<div
-			className='overflow-x-auto overflow-y-auto '
+			className='overflow-x-auto overflow-y-auto'
 			style={{ maxHeight: '80vh', maxWidth: '100%' }}
 		>
 			<table className='table-fixed w-full'>
 				<thead>
-					<tr className=''>
+					<tr>
 						{columns.map((col, ind) => (
 							<th
 								key={ind}
@@ -68,115 +76,83 @@ const CusTable = ({
 					</tr>
 				</thead>
 				<tbody>
-					{Object.keys(rows).length == 0 ? (
+					{Object.keys(rows).length === 0 ? (
 						<tr className='text-center text-xs p-8 mt-5'>
 							<td colSpan={columns.length}>
 								No data available here.
 							</td>
 						</tr>
 					) : (
-						<>
-							{rows.map((row, index) => (
-								<tr
-									key={index}
-									className={`${
-										index === 0
-											? 'bg-body/[.4]'
-											: index % 2 === 1
-												? 'bg-white'
-												: 'bg-body/[.4]'
-									} hover:bg-body text-xs`}
-								>
-									{columns.map((col, colIndex) => (
-										<td
-											key={colIndex}
-											className='w-full p-2'
-										>
-											{col.type === 'image' ? (
-												<>
-													<img
-														src={row[col.key]}
-														alt={`${col.label}`}
-														className='w-15 h-15 object-cover cursor-pointer'
-														onClick={() => {
-															setOpenImg(true);
-															setImg(
-																row[col.key]
-															);
-														}}
-													/>
-												</>
-											) : col.type === 'time' ? (
-												moment(row[col.key]).format(
-													'MM-DD-YYYY'
-												)
-											) : (
-												row[col.key]
-											)}
-										</td>
-									))}
+						rows.map((row, index) => (
+							<tr
+								key={index}
+								className={`${
+									index === 0
+										? 'bg-body/[.4]'
+										: index % 2 === 1
+											? 'bg-white'
+											: 'bg-body/[.4]'
+								} hover:bg-body text-xs`}
+							>
+								{columns.map((col, colIndex) => (
+									<td
+										key={colIndex}
+										className='w-full p-2'
+									>
+										{col.type === 'image' ? (
+											<img
+												src={row[col.key]}
+												alt={`${col.label}`}
+												className='w-15 h-15 object-cover cursor-pointer'
+												onClick={() => {
+													setOpenImg(true);
+													setImg(row[col.key]);
+												}}
+											/>
+										) : col.type === 'pdf' ? (
+											<button
+												onClick={() => {
+													setPdfUrl(row[col.key]);
+													setOpenPdf(true);
+												}}
+												className='bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600'
+											>
+												View
+											</button>
+										) : col.type === 'time' ? (
+											moment(row[col.key]).format(
+												'MM-DD-YYYY'
+											)
+										) : (
+											row[col.key]
+										)}
+									</td>
+								))}
 
-									{action && (
-										<td className='text-xs p-2'>
-											<div className='flex flex-col gap-2 justify-center'>
-												<button
-													onClick={() => onEdit(row)}
-													className='bg-orange-200 p-2 rounded-full hover:bg-orange-300 flex flex-row gap-1 items-center'
-												>
-													<svg
-														xmlns='http://www.w3.org/2000/svg'
-														className='h-3 w-3'
-														fill='none'
-														viewBox='0 0 24 24'
-														stroke='currentColor'
-														strokeWidth='2'
-													>
-														<path
-															strokeLinecap='round'
-															strokeLinejoin='round'
-															d='M15.232 5.232l3.536 3.536M16.732 2.732a2.828 2.828 0 114 4l-12 12-4.5 1.5 1.5-4.5 12-12z'
-														/>
-													</svg>
-													Edit
-												</button>
-												<button
-													onClick={() =>
-														onDelete(row)
-													}
-													className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
-												>
-													<svg
-														xmlns='http://www.w3.org/2000/svg'
-														className='h-3 w-3'
-														fill='none'
-														viewBox='0 0 24 24'
-														stroke='currentColor'
-														strokeWidth='2'
-													>
-														<path
-															strokeLinecap='round'
-															strokeLinejoin='round'
-															d='M6 18L18 6M6 6l12 12'
-														/>
-													</svg>
-													<>Del</>
-												</button>
-											</div>
-										</td>
-									)}
-								</tr>
-							))}
-						</>
+								{action && (
+									<td className='text-xs p-2'>
+										<div className='flex flex-col gap-2 justify-center'>
+											<button
+												onClick={() => onEdit(row)}
+												className='bg-orange-200 p-2 rounded-full hover:bg-orange-300 flex flex-row gap-1 items-center'
+											>
+												Edit
+											</button>
+											<button
+												onClick={() => onDelete(row)}
+												className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
+											>
+												Del
+											</button>
+										</div>
+									</td>
+								)}
+							</tr>
+						))
 					)}
 				</tbody>
 			</table>
-			{/* <CusImgViewer
-				src={img}
-				alt={img}
-				openImage={openImg}
-				setOpenImage={setOpenImg}
-			/>
-			*/}
+
 			<CusAlert
 				open={deleteOpen}
 				setOpen={setOpenDelete}
@@ -184,6 +160,33 @@ const CusTable = ({
 				content='Are you sure you want to delete this item?'
 				onConfirm={handleDelete}
 			/>
+
+			{openPdf && pdfUrl && (
+				<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
+					<div className='bg-white p-4 rounded-lg w-[80%] h-[80%] overflow-auto relative'>
+						<button
+							className='absolute top-2 right-2 text-xl font-bold text-gray-600 hover:text-black'
+							onClick={() => setOpenPdf(false)}
+						>
+							&times;
+						</button>
+						<Document
+							file={pdfUrl}
+							onLoadSuccess={({ numPages }) =>
+								setNumPages(numPages)
+							}
+							className='w-full h-full'
+						>
+							{Array.from({ length: numPages }, (_, index) => (
+								<Page
+									key={index + 1}
+									pageNumber={index + 1}
+								/>
+							))}
+						</Document>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };

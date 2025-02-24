@@ -48,9 +48,9 @@ const EditUsers = ({ curRow, setEditUser, showEditUser }) => {
 			const existingImageUrl = imageFile ? curRow.image : null;
 
 			editItem(
+				tableName,
 				itemId,
 				updatedItem,
-				tableName,
 				newImageFile,
 				existingImageUrl
 			);
