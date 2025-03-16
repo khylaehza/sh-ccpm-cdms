@@ -95,6 +95,59 @@ export const DataProvider = ({ children }) => {
 		return Object.assign({}, ...uploadedFiles);
 	};
 
+	// const editItem = async (
+	// 	tableName,
+	// 	itemId,
+	// 	updatedItem,
+	// 	imageFile = null,
+	// 	existingImageUrl = null,
+	// 	pdfFiles = null
+	// ) => {
+	// 	const itemRef = ref(db, `${tableName}/${itemId}`);
+
+	// 	try {
+	// 		const uploadedFiles = pdfFiles ? await uploadFiles(pdfFiles) : {};
+	// 		const itemData = { ...updatedItem, ...uploadedFiles };
+
+	// 		if (imageFile) {
+	// 			const randomName = `${tableName}_${Date.now()}`;
+	// 			const metadata = {
+	// 				contentType: imageFile.type || 'image/jpeg',
+	// 			};
+	// 			const imagesRef = storeRef(storage, `images/${randomName}`);
+	// 			const uploadTask = await uploadBytesResumable(
+	// 				imagesRef,
+	// 				imageFile,
+	// 				metadata
+	// 			);
+	// 			itemData.image = await getDownloadURL(uploadTask.ref);
+	// 		} else if (existingImageUrl) {
+	// 			itemData.image = existingImageUrl;
+	// 		}
+
+	// 		console.log('ds', itemRef, itemData);
+
+	// 		await update(itemRef, itemData);
+
+	// 		console.log('done editing');
+
+	// 		setPrompt({
+	// 			stats: 'Successful',
+	// 			message: 'Item updated successfully.',
+	// 		});
+	// 		setIsVisible(true);
+	// 		setTimeout(() => setIsVisible(false), 6000);
+	// 	} catch (error) {
+	// 		console.error('Error updating item:', error);
+	// 		setPrompt({
+	// 			stats: 'Error',
+	// 			message: 'Failed to update item. Try again.',
+	// 		});
+	// 		setIsVisible(true);
+	// 		setTimeout(() => setIsVisible(false), 6000);
+	// 	}
+	// };
+
 	const editItem = async (
 		tableName,
 		itemId,
@@ -104,10 +157,24 @@ export const DataProvider = ({ children }) => {
 		pdfFiles = null
 	) => {
 		const itemRef = ref(db, `${tableName}/${itemId}`);
-		try {
-			const uploadedFiles = pdfFiles ? await uploadFiles(pdfFiles) : {};
-			const itemData = { ...updatedItem, ...uploadedFiles };
 
+		try {
+			// Filter out undefined values
+			const cleanUpdatedItem = Object.fromEntries(
+				Object.entries(updatedItem).filter(
+					([_, value]) => value !== undefined
+				)
+			);
+
+			const uploadedFiles = pdfFiles ? await uploadFiles(pdfFiles) : {};
+
+			// Merge existing values and uploaded files
+			const itemData = {
+				...cleanUpdatedItem,
+				...uploadedFiles,
+			};
+
+			// Handle image upload if needed
 			if (imageFile) {
 				const randomName = `${tableName}_${Date.now()}`;
 				const metadata = {
@@ -124,7 +191,10 @@ export const DataProvider = ({ children }) => {
 				itemData.image = existingImageUrl;
 			}
 
+			// ✅ Update data in Firebase without undefined values
 			await update(itemRef, itemData);
+
+			console.log('done editing');
 
 			setPrompt({
 				stats: 'Successful',

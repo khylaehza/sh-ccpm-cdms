@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CusModal } from '../../shared';
 import { GeneralDepForm } from '../../forms';
 import { useFormik } from 'formik';
@@ -6,10 +6,45 @@ import * as Yup from 'yup';
 import { useData } from '../../DataContext';
 
 const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
-	const [imageFile, setImageFile] = useState(null);
+	const [pdfFiles, setPdfFiles] = useState({});
+	const [fileNames, setFileNames] = useState({});
 
-	const OnImgChange = (event) => {
-		setImageFile(event.target.files[0]);
+	useEffect(() => {
+		// Initialize existing file names
+		setFileNames({
+			project_briefing: curRow.project_briefing
+				? curRow.project_briefing.split('/').pop()
+				: '',
+			costing: curRow.costing ? curRow.costing.split('/').pop() : '',
+			quotation: curRow.quotation
+				? curRow.quotation.split('/').pop()
+				: '',
+			client_po: curRow.client_po
+				? curRow.client_po.split('/').pop()
+				: '',
+			pur_of_raw_materials: curRow.pur_of_raw_materials
+				? curRow.pur_of_raw_materials.split('/').pop()
+				: '',
+			dr: curRow.dr ? curRow.dr.split('/').pop() : '',
+			sl: curRow.sl ? curRow.sl.split('/').pop() : '',
+			cr: curRow.cr ? curRow.cr.split('/').pop() : '',
+		});
+	}, [curRow]);
+
+	const handlePdfChange = (event) => {
+		const { name, files } = event.target;
+		if (files.length > 0) {
+			setPdfFiles((prev) => ({
+				...prev,
+				[name]: files[0],
+			}));
+
+			// Update displayed file name
+			setFileNames((prev) => ({
+				...prev,
+				[name]: files[0].name,
+			}));
+		}
 	};
 
 	const { editItem } = useData();
@@ -33,42 +68,31 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 		}),
 		onSubmit: (value, actions) => {
 			const itemId = curRow.key;
-			const updatedItem = value;
 			const tableName = 'generalDep';
-			const newImageFile = imageFile;
-			const existingImageUrl = imageFile ? curRow.image : null;
 
-			editItem(
-				tableName,
-				itemId,
-				updatedItem,
-				newImageFile,
-				existingImageUrl
-			);
+			editItem(tableName, itemId, value, null, null, pdfFiles);
 
 			actions.resetForm();
-			setImageFile(null);
+			setPdfFiles({});
 			setEditGeneralDep(false);
 		},
 	});
 
 	return (
-		<div>
-			<CusModal
-				btnLabel={'Edit'}
-				content={
-					<GeneralDepForm
-						form={editForm}
-						handleImage={OnImgChange}
-					/>
-				}
-				title={'Edit General Department Data'}
-				setOpen={setEditGeneralDep}
-				setImageFile={setImageFile}
-				open={showEditGeneralDep}
-				form={editForm}
-			/>
-		</div>
+		<CusModal
+			btnLabel='Edit'
+			content={
+				<GeneralDepForm
+					form={editForm}
+					handleFileUpload={handlePdfChange}
+					fileNames={fileNames}
+				/>
+			}
+			title='Edit General Department Data'
+			setOpen={setEditGeneralDep}
+			open={showEditGeneralDep}
+			form={editForm}
+		/>
 	);
 };
 

@@ -5,7 +5,7 @@ import moment from 'moment';
 import CusAlert from './CusAlert';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-	'../node_modules/pdfjs-dist/build/pdf.worker.min.js',
+	'../assets/pdf.worker.min.mjs',
 	import.meta.url
 ).toString();
 
@@ -25,7 +25,6 @@ const CusTable = ({
 	const [tblName, setTableName] = useState(null);
 	const [imageUrl, setImageUrl] = useState(null);
 
-	// PDF Viewer State
 	const [pdfUrl, setPdfUrl] = useState(null);
 	const [openPdf, setOpenPdf] = useState(false);
 	const [numPages, setNumPages] = useState(null);
@@ -51,7 +50,13 @@ const CusTable = ({
 		setOpenDelete(false);
 	};
 
-	console.log(pdfUrl);
+	const openPdfInNewTab = (url) => {
+		if (url) {
+			window.open(url, '_blank');
+		} else {
+			console.error('Invalid PDF URL');
+		}
+	};
 	return (
 		<div
 			className='overflow-x-auto overflow-y-auto'
@@ -100,31 +105,46 @@ const CusTable = ({
 										className='w-full p-2'
 									>
 										{col.type === 'image' ? (
-											<img
-												src={row[col.key]}
-												alt={`${col.label}`}
-												className='w-15 h-15 object-cover cursor-pointer'
-												onClick={() => {
-													setOpenImg(true);
-													setImg(row[col.key]);
-												}}
-											/>
-										) : col.type === 'pdf' ? (
-											<button
-												onClick={() => {
-													setPdfUrl(row[col.key]);
-													setOpenPdf(true);
-												}}
-												className='bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600'
-											>
-												View
-											</button>
-										) : col.type === 'time' ? (
-											moment(row[col.key]).format(
-												'MM-DD-YYYY'
+											row[col.key] ? (
+												<img
+													src={row[col.key]}
+													alt={`${col.label}`}
+													className='w-15 h-15 object-cover cursor-pointer'
+													onClick={() => {
+														setOpenImg(true);
+														setImg(row[col.key]);
+													}}
+												/>
+											) : (
+												<span>No Data Available</span>
 											)
-										) : (
+										) : col.type === 'pdf' ? (
+											row[col.key] ? (
+												<button
+													onClick={() =>
+														openPdfInNewTab(
+															row[col.key]
+														)
+													}
+													className='bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600'
+												>
+													View
+												</button>
+											) : (
+												<span>No Data Available</span>
+											)
+										) : col.type === 'time' ? (
+											row[col.key] ? (
+												moment(row[col.key]).format(
+													'MM-DD-YYYY'
+												)
+											) : (
+												<span>No Data Available</span>
+											)
+										) : row[col.key] ? (
 											row[col.key]
+										) : (
+											<span>No Data Available</span>
 										)}
 									</td>
 								))}
