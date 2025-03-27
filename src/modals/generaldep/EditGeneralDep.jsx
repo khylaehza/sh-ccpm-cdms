@@ -51,26 +51,40 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 
 	const editForm = useFormik({
 		initialValues: {
-			created_at: curRow.created_at,
-			project_name: curRow.project_name,
-			project_briefing: curRow.project_briefing,
-			costing: curRow.costing,
-			quotation: curRow.quotation,
-			client_po: curRow.client_po,
-			pur_of_raw_materials: curRow.pur_of_raw_materials,
-			dr: curRow.dr,
-			sl: curRow.sl,
-			cr: curRow.cr,
+			created_at: curRow.created_at || '',
+			project_name: curRow.project_name || '',
+			project_briefing: curRow.project_briefing || null,
+			project_briefing_date: curRow.project_briefing_date || '',
+			costing: curRow.costing || null,
+			costing_date: curRow.costing_date || '',
+			costing_amt: curRow.costing_amt || '',
+			quotation: curRow.quotation || null,
+			quotation_date: curRow.quotation_date || '',
+			quotation_text: curRow.quotation_text || '',
+			client_po: curRow.client_po || null,
+			client_date: curRow.client_date || '',
+			client_qty: curRow.client_qty || '',
+			costing_specifies: curRow.costing_specifies || '',
+			pur_of_raw_materials: curRow.pur_of_raw_materials || null,
+			purchase_date: curRow.purchase_date || '',
+			purchase_amt: curRow.purchase_amt || '',
+			dr: curRow.dr || null,
+			dr_date: curRow.dr_date || '',
+			sl: curRow.sl || null,
+			sl_date: curRow.sl_date || '',
+			cr: curRow.cr || null,
+			cr_date: curRow.cr_date || '',
+			cr_amt: curRow.cr_amt || '',
 		},
 		enableReinitialize: true,
 		validationSchema: Yup.object({
 			project_name: Yup.string().required('Project Name is required.'),
 		}),
-		onSubmit: (value, actions) => {
+		onSubmit: (values, actions) => {
 			const itemId = curRow.key;
 			const tableName = 'generalDep';
 
-			editItem(tableName, itemId, value, null, null, pdfFiles);
+			editItem(tableName, itemId, values, null, null, pdfFiles);
 
 			actions.resetForm();
 			setPdfFiles({});

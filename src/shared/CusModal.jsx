@@ -33,7 +33,7 @@ const CusModal = ({
 				<div className='fixed inset-0 z-10 w-screen overflow-y-auto'>
 					<div className='flex min-h-full items-center justify-center p-4 text-center sm:p-0'>
 						<form onSubmit={form.handleSubmit}>
-							<div className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg'>
+							<div className='relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 max-w-[80vw] overflow-x-auto'>
 								<div className='bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4'>
 									<div className='flex justify-between w-full items-center'>
 										<h3
@@ -44,7 +44,7 @@ const CusModal = ({
 										</h3>
 										<button
 											type='button'
-											className='text-gray-400 hover:text-gray-600 bg-transparent outline-none hover-none border-none'
+											className='text-gray-400 hover:text-gray-600 bg-transparent outline-none border-none'
 											onClick={onCancel}
 										>
 											&times;
@@ -61,7 +61,7 @@ const CusModal = ({
 									<div className='bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6'>
 										<button
 											type='submit'
-											className='inline-flex w-full justify-center rounded-md bg-header px-3 py-2 text-sm font-semibold text-black shadow-sm 	sm:ml-3 sm:w-auto bg-secondary'
+											className='inline-flex w-full justify-center rounded-md bg-header px-3 py-2 text-sm font-semibold text-black shadow-sm sm:ml-3 sm:w-auto bg-secondary'
 										>
 											{btnLabel}
 										</button>

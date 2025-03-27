@@ -3,6 +3,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import { useData } from '../DataContext';
 import moment from 'moment';
 import CusAlert from './CusAlert';
+import CusModalInfo from './CusModalInfo';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 	'../assets/pdf.worker.min.mjs',
@@ -16,6 +17,7 @@ const CusTable = ({
 	setCurRow,
 	setEdit,
 	action = true,
+	fields,
 }) => {
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
@@ -28,6 +30,10 @@ const CusTable = ({
 	const [pdfUrl, setPdfUrl] = useState(null);
 	const [openPdf, setOpenPdf] = useState(false);
 	const [numPages, setNumPages] = useState(null);
+
+	const [viewData, setViewData] = useState(null);
+	const [title, setTitle] = useState(null);
+	const [showViewModal, setShowViewModal] = useState(false);
 
 	const onEdit = (row) => {
 		setCurRow(row);
@@ -57,6 +63,32 @@ const CusTable = ({
 			console.error('Invalid PDF URL');
 		}
 	};
+
+	// Handle view for 'title' type
+	const handleView = (row) => {
+		console.log(row, fields);
+
+		const groupedData = Object.keys(fields).reduce((result, group) => {
+			const data = fields[group].reduce((acc, key) => {
+				if (row[key]) {
+					// Only add non-empty values
+					acc[key] = row[key];
+				}
+				return acc;
+			}, {});
+
+			if (Object.keys(data).length > 0) {
+				result[group] = data;
+			}
+
+			return result;
+		}, {});
+
+		setViewData(groupedData);
+		setShowViewModal(true);
+		setTitle(row.project_name);
+	};
+
 	return (
 		<div
 			className='overflow-x-auto overflow-y-auto'
@@ -68,22 +100,22 @@ const CusTable = ({
 						{columns.map((col, ind) => (
 							<th
 								key={ind}
-								className='p-6 text-center text-sm bg-primary text-white font-montserrat'
+								className='p-6 text-left text-sm bg-primary50 text-white font-montserrat'
 							>
 								{col.label}
 							</th>
 						))}
 						{action && (
-							<th className='p-6 text-center text-sm bg-primary text-white font-montserrat'>
+							<th className='p-6 text-left text-sm bg-primary50 text-white font-montserrat w-32'>
 								Actions
 							</th>
 						)}
 					</tr>
 				</thead>
 				<tbody>
-					{Object.keys(rows).length === 0 ? (
-						<tr className='text-center text-xs p-8 mt-5'>
-							<td colSpan={columns.length}>
+					{rows.length === 0 ? (
+						<tr className='text-center text-xs p-6 mt-5'>
+							<td colSpan={columns.length + 1}>
 								No data available here.
 							</td>
 						</tr>
@@ -92,17 +124,15 @@ const CusTable = ({
 							<tr
 								key={index}
 								className={`${
-									index === 0
-										? 'bg-body/[.4]'
-										: index % 2 === 1
-											? 'bg-white'
-											: 'bg-body/[.4]'
+									index % 2 === 0
+										? 'bg-gray-50'
+										: 'bg-secondary/[.1]'
 								} hover:bg-body text-xs`}
 							>
 								{columns.map((col, colIndex) => (
 									<td
 										key={colIndex}
-										className='w-full p-2'
+										className='w-full p-6 text-left align-middle'
 									>
 										{col.type === 'image' ? (
 											row[col.key] ? (
@@ -133,6 +163,19 @@ const CusTable = ({
 											) : (
 												<span>No Data Available</span>
 											)
+										) : col.type === 'title' ? (
+											row[col.key] ? (
+												<button
+													onClick={() =>
+														handleView(row)
+													}
+													className='text-blue-500 underline bg-transparent '
+												>
+													{row[col.key]}
+												</button>
+											) : (
+												<span>No Data Available</span>
+											)
 										) : col.type === 'time' ? (
 											row[col.key] ? (
 												moment(row[col.key]).format(
@@ -151,18 +194,51 @@ const CusTable = ({
 
 								{action && (
 									<td className='text-xs p-2'>
-										<div className='flex flex-col gap-2 justify-center'>
+										<div className='flex flex-col gap-2 justify-center items-center'>
 											<button
 												onClick={() => onEdit(row)}
-												className='bg-orange-200 p-2 rounded-full hover:bg-orange-300 flex flex-row gap-1 items-center'
+												className='bg-orange-200 p-2 rounded-full hover:bg-orange-300 flex gap-1 items-center justify-center w-full'
 											>
-												Edit
+												<svg
+													xmlns='http://www.w3.org/2000/svg'
+													width='16'
+													height='16'
+													fill='none'
+													viewBox='0 0 24 24'
+													stroke='currentColor'
+													strokeWidth='2'
+													className='w-4 h-4'
+												>
+													<path
+														strokeLinecap='round'
+														strokeLinejoin='round'
+														d='M16.862 3.487a2.344 2.344 0 1 1 3.315 3.316L7.067 19.913a4.677 4.677 0 0 1-2.185 1.236l-3.058.765a.703.703 0 0 1-.851-.85l.766-3.058a4.677 4.677 0 0 1 1.235-2.185L16.862 3.487z'
+													/>
+												</svg>
+												<span>Edit</span>
 											</button>
+
 											<button
 												onClick={() => onDelete(row)}
-												className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex flex-row gap-1 items-center'
+												className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex gap-1 items-center justify-center w-full'
 											>
-												Del
+												<svg
+													xmlns='http://www.w3.org/2000/svg'
+													width='16'
+													height='16'
+													fill='none'
+													viewBox='0 0 24 24'
+													stroke='currentColor'
+													strokeWidth='2'
+													className='w-4 h-4'
+												>
+													<path
+														strokeLinecap='round'
+														strokeLinejoin='round'
+														d='M6 18L18 6M6 6l12 12'
+													/>
+												</svg>
+												<span>Del</span>
 											</button>
 										</div>
 									</td>
@@ -180,6 +256,15 @@ const CusTable = ({
 				content='Are you sure you want to delete this item?'
 				onConfirm={handleDelete}
 			/>
+
+			{viewData && (
+				<CusModalInfo
+					open={showViewModal}
+					setOpen={setShowViewModal}
+					data={viewData}
+					title={title}
+				/>
+			)}
 
 			{openPdf && pdfUrl && (
 				<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50'>
@@ -210,4 +295,5 @@ const CusTable = ({
 		</div>
 	);
 };
+
 export default CusTable;

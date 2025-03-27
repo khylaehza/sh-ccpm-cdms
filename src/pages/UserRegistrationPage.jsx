@@ -8,6 +8,7 @@ const UserRegistrationPage = () => {
 	const { users } = useData();
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
+	const [showSideNav, setShowSideNav] = useState(true);
 	const [curRow, setCurRow] = useState();
 	const [showEditUser, setEditUser] = useState(false);
 
@@ -38,9 +39,9 @@ const UserRegistrationPage = () => {
 
 	return (
 		<div className='flex font-montserrat'>
-			<SideNav />
+			{showSideNav && <SideNav onClose={() => setShowSideNav(false)} />}
 			<div className='flex flex-1 flex-col bg-white text-white w-screen h-screen '>
-				<Header />
+				<Header onLogoClick={() => setShowSideNav(true)} />
 				<div className='flex-1 p-16 gap-12 text-black flex flex-col gap-4'>
 					<div className='flex flex-row justify-between'>
 						<div>

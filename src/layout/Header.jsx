@@ -1,12 +1,13 @@
 import React from 'react';
 import logo from '../assets/cdms-logo.png';
-const Header = () => {
+const Header = ({ onLogoClick }) => {
 	return (
 		<div className='h-24 bg-primary shadow-xl flex items-center justify-between gap-6 p-6 font-montserrat'>
 			<img
 				src={logo}
 				alt='Logo'
-				className='w-auto h-16'
+				className='w-auto h-28 cursor-pointer'
+				onClick={onLogoClick}
 			/>
 			<div className='text-lg font-bold'>Centralized Data Management</div>
 			<div className='flex flex-row items-center justify-center gap-4'>

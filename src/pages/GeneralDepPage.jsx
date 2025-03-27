@@ -8,12 +8,13 @@ const GeneralDepPage = () => {
 	const { generalDep } = useData();
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
+	const [showSideNav, setShowSideNav] = useState(true);
 	const [curRow, setCurRow] = useState();
 	const [showEditGeneralDep, setEditGeneralDep] = useState(false);
 
 	const columns = [
 		{ key: 'created_at', label: 'Created At', type: 'time' },
-		{ key: 'project_name', label: 'Project Name' },
+		{ key: 'project_name', label: 'Project Name', type: 'title' },
 		{ key: 'project_briefing', label: 'Project Briefing', type: 'pdf' },
 		{ key: 'costing', label: 'Costing', type: 'pdf' },
 		{ key: 'quotation', label: 'Quotation', type: 'pdf' },
@@ -47,11 +48,20 @@ const GeneralDepPage = () => {
 					})
 			: [];
 
+	const fields = {
+		Costing: ['costing_date'],
+		Quotation: ['quotation_date'],
+		'Client P.O': ['client_date'],
+		'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
+		DR: ['dr_date'],
+		SL: ['sl_date'],
+		CR: ['cr_date', 'cr_amt'],
+	};
 	return (
 		<div className='flex font-montserrat'>
-			<SideNav />
+			{showSideNav && <SideNav onClose={() => setShowSideNav(false)} />}
 			<div className='flex flex-1 flex-col bg-white text-white w-screen h-screen'>
-				<Header />
+				<Header onLogoClick={() => setShowSideNav(true)} />
 				<div className='flex-1 p-16 gap-12 text-black flex flex-col gap-4'>
 					<div className='flex flex-row justify-between'>
 						<div>
@@ -68,6 +78,7 @@ const GeneralDepPage = () => {
 						tableName={'generalDep'}
 						setCurRow={setCurRow}
 						setEdit={setEditGeneralDep}
+						fields={fields}
 					/>
 				</div>
 				{curRow && (

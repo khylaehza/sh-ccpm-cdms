@@ -27,16 +27,29 @@ const AddGeneralDep = () => {
 			created_at: moment().format(),
 			project_name: '',
 			project_briefing: null,
+			project_briefing_date: '',
 			costing: null,
+			costing_date: '',
+			costing_amt: '',
 			quotation: null,
+			quotation_date: '',
+			quotation_text: '',
 			client_po: null,
+			client_date: '',
+			client_qty: '',
+			costing_specifies: '',
 			pur_of_raw_materials: null,
+			purchase_date: '',
+			purchase_amt: '',
 			dr: null,
+			dr_date: '',
 			sl: null,
+			sl_date: '',
 			cr: null,
+			cr_date: '',
+			cr_amt: '',
 		},
 		onSubmit: (values, actions) => {
-			console.log(values, pdfFiles);
 			addItem(values, 'generalDep', null, pdfFiles);
 			actions.resetForm();
 			setPdfFiles({});
