@@ -2,11 +2,15 @@ import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SideNav = ({ onClose }) => {
-	const location = useLocation();
 	const navigate = useNavigate();
 
+	const handleLogout = () => {
+		localStorage.removeItem('curUser');
+		setCurUser();
+		navigate('/');
+	};
 	return (
-		<div className='w-64 h-screen bg-primary50 flex flex-col p-2 text-white shadow-2xl transition-transform duration-300'>
+		<div className='w-64 h-screen bg-primary50 flex flex-col p-2 text-white shadow-2xl transition-transform duration-300 '>
 			<div className='flex justify-end mb-4'>
 				<button
 					onClick={onClose}
@@ -39,20 +43,20 @@ const SideNav = ({ onClose }) => {
 						</li>
 						<li
 							className='p-2 hover:bg-primary hover:text-gray hover:cursor-pointer flex flex-row gap-2'
-							onClick={() => navigate('/general')}
+							onClick={() => navigate('/projects')}
 						>
-							General Department
+							Projects
 						</li>
 					</ul>
 				</nav>
-				<div className='flex items-center justify-center w-full'>
+				{/* <div className='flex items-center justify-center w-full'>
 					<button
 						className='w-full bg-black/[0.3]'
-						onClick={() => navigate('/')}
+						onClick={handleLogout}
 					>
 						LOG OUT
 					</button>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

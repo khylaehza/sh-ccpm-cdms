@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { CusPrimButton, CusModal } from '../../shared';
 import { GeneralDepForm } from '../../forms';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { useData } from '../../DataContext';
 import moment from 'moment';
 
@@ -20,7 +19,7 @@ const AddGeneralDep = () => {
 		}
 	};
 
-	const { addItem } = useData();
+	const { addItem, curUser } = useData();
 
 	const form = useFormik({
 		initialValues: {
@@ -63,7 +62,7 @@ const AddGeneralDep = () => {
 				label={'ADD PROJECT'}
 				color={'black'}
 				text={'white'}
-				w='36'
+				w='full'
 				onClick={() => setAddGeneralDep(true)}
 			/>
 			<CusModal
@@ -72,9 +71,10 @@ const AddGeneralDep = () => {
 					<GeneralDepForm
 						form={form}
 						handleFileUpload={handlePdfChange}
+						department={curUser?.department.toLowerCase()}
 					/>
 				}
-				title={'Add General Department Data'}
+				title={'Add Project'}
 				setOpen={setAddGeneralDep}
 				open={showAddGeneralDep}
 				form={form}

@@ -18,6 +18,20 @@ const AddUsers = () => {
 	};
 	const { addItem } = useData();
 
+	// const generateUsername = (uname, department) => {
+	// 	const prefixes = {
+	// 		General: 'GE',
+	// 		Finance: 'FI',
+	// 		Marketing: 'MA',
+	// 		'Product Development': 'PD',
+	// 		'Inventory and Purchasing': 'IP',
+	// 		'Product and Activation': 'PA',
+	// 	};
+	// 	return prefixes[department]
+	// 		? `${prefixes[department]}_${uname}`
+	// 		: uname;
+	// };
+
 	const form = useFormik({
 		initialValues: {
 			name: '',
@@ -40,10 +54,14 @@ const AddUsers = () => {
 				.required('Password is required.'),
 			conpass: Yup.string()
 				.oneOf([Yup.ref('pass'), null], 'Passwords must match.')
-				.required(' Confirm Password is required.'),
+				.required('Confirm Password is required.'),
 		}),
-		onSubmit: (value, actions) => {
-			addItem(value, 'users', imageFile);
+		onSubmit: (values, actions) => {
+			const modifiedValues = {
+				...values,
+			};
+
+			addItem(modifiedValues, 'users', imageFile);
 
 			actions.resetForm();
 			setImageFile(null);
@@ -72,6 +90,7 @@ const AddUsers = () => {
 				setOpen={setAddUsers}
 				open={showAddUsers}
 				form={form}
+				user={true}
 			/>
 		</div>
 	);

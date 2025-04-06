@@ -32,6 +32,7 @@ const CusTable = ({
 	const [numPages, setNumPages] = useState(null);
 
 	const [viewData, setViewData] = useState(null);
+	const [dateModified, setDateModified] = useState(null);
 	const [title, setTitle] = useState(null);
 	const [showViewModal, setShowViewModal] = useState(false);
 
@@ -66,8 +67,6 @@ const CusTable = ({
 
 	// Handle view for 'title' type
 	const handleView = (row) => {
-		console.log(row, fields);
-
 		const groupedData = Object.keys(fields).reduce((result, group) => {
 			const data = fields[group].reduce((acc, key) => {
 				if (row[key]) {
@@ -87,6 +86,7 @@ const CusTable = ({
 		setViewData(groupedData);
 		setShowViewModal(true);
 		setTitle(row.project_name);
+		setDateModified(row.modified_date ? row.modified_date : row.created_at);
 	};
 
 	return (
@@ -263,6 +263,7 @@ const CusTable = ({
 					setOpen={setShowViewModal}
 					data={viewData}
 					title={title}
+					dateModified={dateModified}
 				/>
 			)}
 

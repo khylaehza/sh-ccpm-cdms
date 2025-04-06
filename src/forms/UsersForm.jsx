@@ -43,10 +43,10 @@ const UsersForm = ({ form, handleImage }) => {
 							value: 'Product Development',
 							label: 'Product Development',
 						},
-						{
-							value: 'Inventory and Purchasing',
-							label: 'Inventory and Purchasing',
-						},
+						// {
+						// 	value: 'Inventory and Purchasing',
+						// 	label: 'Inventory and Purchasing',
+						// },
 						{
 							value: 'Product and Activation',
 							label: 'Product and Activation',

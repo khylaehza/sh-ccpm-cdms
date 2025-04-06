@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Header, SideNav } from '../layout';
-import { CusTable } from '../shared';
+import { CusSearch, CusTable, CusSort, CusNotif } from '../shared';
 import { AddGeneralDep, EditGeneralDep } from '../modals';
 import { useData } from '../DataContext';
 
 const GeneralDepPage = () => {
-	const { generalDep } = useData();
+	const { generalDep, curUser, prompt } = useData();
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
-	const [showSideNav, setShowSideNav] = useState(true);
+	const [showSideNav, setShowSideNav] = useState(
+		curUser?.role === 'Super Admin'
+	);
 	const [curRow, setCurRow] = useState();
 	const [showEditGeneralDep, setEditGeneralDep] = useState(false);
 
-	const columns = [
+	let columns = [
 		{ key: 'created_at', label: 'Created At', type: 'time' },
 		{ key: 'project_name', label: 'Project Name', type: 'title' },
 		{ key: 'project_briefing', label: 'Project Briefing', type: 'pdf' },
@@ -28,6 +30,52 @@ const GeneralDepPage = () => {
 		{ key: 'sl', label: 'SL', type: 'pdf' },
 		{ key: 'cr', label: 'CR', type: 'pdf' },
 	];
+
+	let fields = {
+		Costing: ['costing_date'],
+		Quotation: ['quotation_date'],
+		'Client P.O': ['client_date'],
+		'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
+		DR: ['dr_date'],
+		SL: ['sl_date'],
+		CR: ['cr_date', 'cr_amt'],
+	};
+
+	const department = curUser?.department?.toLowerCase();
+
+	if (department === 'finance') {
+		columns = columns.filter((col) => col.key !== 'quotation');
+		fields = Object.fromEntries(
+			Object.entries(fields).filter(([key]) => key !== 'Quotation')
+		);
+	} else if (department === 'product development') {
+		columns = columns.filter((col) =>
+			[
+				'created_at',
+				'project_name',
+				'project_briefing',
+				'client_po',
+				'pur_of_raw_materials',
+			].includes(col.key)
+		);
+		fields = {
+			Created: ['created_at'],
+			'Project Name': ['project_name'],
+			'Project Briefing': ['project_briefing'],
+			'Client PO': ['client_po'],
+			'Purchase of Raw Materials': ['pur_of_raw_materials'],
+		};
+	} else if (department === 'product and activation') {
+		columns = columns.filter((col) =>
+			['created_at', 'project_name', 'client_po', 'dr'].includes(col.key)
+		);
+		fields = {
+			Created: ['created_at'],
+			'Project Name': ['project_name'],
+			'Client PO': ['client_po'],
+			DR: ['dr'],
+		};
+	}
 
 	const rows =
 		generalDep?.length > 0
@@ -48,29 +96,37 @@ const GeneralDepPage = () => {
 					})
 			: [];
 
-	const fields = {
-		Costing: ['costing_date'],
-		Quotation: ['quotation_date'],
-		'Client P.O': ['client_date'],
-		'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
-		DR: ['dr_date'],
-		SL: ['sl_date'],
-		CR: ['cr_date', 'cr_amt'],
+	const toggleSideNav = () => {
+		setShowSideNav((prev) => !prev);
 	};
+
 	return (
 		<div className='flex font-montserrat'>
-			{showSideNav && <SideNav onClose={() => setShowSideNav(false)} />}
+			{curUser?.role === 'Super Admin' && showSideNav && (
+				<SideNav onClose={() => setShowSideNav(false)} />
+			)}
 			<div className='flex flex-1 flex-col bg-white text-white w-screen h-screen'>
-				<Header onLogoClick={() => setShowSideNav(true)} />
+				<Header toggleSideNav={toggleSideNav} />
 				<div className='flex-1 p-16 gap-12 text-black flex flex-col gap-4'>
 					<div className='flex flex-row justify-between'>
 						<div>
 							<div className='text-lg font-semibold'>
-								Hi, Admin!
+								Hi, {curUser?.name?.split(' ')[0]}!
 							</div>
-							<div>Manage General Department records here.</div>
+							<div>Manage the projects here.</div>
 						</div>
-						<AddGeneralDep />
+						<div className='flex flex-row w-1/2 h-16 items-center justify-end gap-3'>
+							<CusSearch
+								curSearch={curSearch}
+								setCurSearch={setCurSearch}
+								label={'project name'}
+							/>
+							<CusSort
+								sortOrder={sortOrder}
+								setSortOrder={setSortOrder}
+							/>
+							<AddGeneralDep />
+						</div>
 					</div>
 					<CusTable
 						columns={columns}
@@ -89,6 +145,7 @@ const GeneralDepPage = () => {
 					/>
 				)}
 			</div>
+			<CusNotif prompt={prompt} />
 		</div>
 	);
 };

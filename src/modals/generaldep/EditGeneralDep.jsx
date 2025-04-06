@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { CusModal } from '../../shared';
 import { GeneralDepForm } from '../../forms';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useData } from '../../DataContext';
+import moment from 'moment';
 
 const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 	const [pdfFiles, setPdfFiles] = useState({});
@@ -47,10 +48,10 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 		}
 	};
 
-	const { editItem } = useData();
+	const { editItem, curUser } = useData();
 
-	const editForm = useFormik({
-		initialValues: {
+	const initialValues = useMemo(
+		() => ({
 			created_at: curRow.created_at || '',
 			project_name: curRow.project_name || '',
 			project_briefing: curRow.project_briefing || null,
@@ -75,7 +76,13 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 			cr: curRow.cr || null,
 			cr_date: curRow.cr_date || '',
 			cr_amt: curRow.cr_amt || '',
-		},
+			modified_date: moment().format(),
+		}),
+		[curRow]
+	);
+
+	const editForm = useFormik({
+		initialValues,
 		enableReinitialize: true,
 		validationSchema: Yup.object({
 			project_name: Yup.string().required('Project Name is required.'),
@@ -100,9 +107,10 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 					form={editForm}
 					handleFileUpload={handlePdfChange}
 					fileNames={fileNames}
+					department={curUser?.department.toLowerCase()}
 				/>
 			}
-			title='Edit General Department Data'
+			title='Edit Project'
 			setOpen={setEditGeneralDep}
 			open={showEditGeneralDep}
 			form={editForm}

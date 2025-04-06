@@ -37,7 +37,7 @@ const CusInput = ({
 			>
 				<input
 					name={name}
-					className={`w-full py-2 px-3 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black ${
+					className={`appearance-none w-full py-2 px-3 rounded-lg focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black ${
 						disabled
 							? 'bg-gray-100 cursor-not-allowed'
 							: 'bg-gray-200'

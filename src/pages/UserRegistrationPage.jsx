@@ -1,14 +1,16 @@
 import React from 'react';
 import { Header, SideNav } from '../layout';
-import { CusTable } from '../shared';
+import { CusTable, CusSearch, CusSort, CusNotif } from '../shared';
 import { AddUsers, EditUsers } from '../modals';
 import { useData } from '../DataContext';
 import { useState } from 'react';
 const UserRegistrationPage = () => {
-	const { users } = useData();
+	const { users, curUser, prompt } = useData();
 	const [curSearch, setCurSearch] = useState('');
 	const [sortOrder, setSortOrder] = useState('asc');
-	const [showSideNav, setShowSideNav] = useState(true);
+	const [showSideNav, setShowSideNav] = useState(
+		curUser?.role === 'Super Admin'
+	);
 	const [curRow, setCurRow] = useState();
 	const [showEditUser, setEditUser] = useState(false);
 
@@ -37,21 +39,38 @@ const UserRegistrationPage = () => {
 					})
 			: [];
 
+	const toggleSideNav = () => {
+		setShowSideNav((prev) => !prev);
+	};
+
 	return (
 		<div className='flex font-montserrat'>
-			{showSideNav && <SideNav onClose={() => setShowSideNav(false)} />}
+			{curUser?.role === 'Super Admin' && showSideNav && (
+				<SideNav onClose={() => setShowSideNav(false)} />
+			)}
 			<div className='flex flex-1 flex-col bg-white text-white w-screen h-screen '>
-				<Header onLogoClick={() => setShowSideNav(true)} />
+				<Header toggleSideNav={toggleSideNav} />
 				<div className='flex-1 p-16 gap-12 text-black flex flex-col gap-4'>
 					<div className='flex flex-row justify-between'>
 						<div>
 							<div className='text-lg font-semibold'>
-								Hi, Rafael!
+								Hi, {curUser?.name?.split(' ')[0]}!
 							</div>
 							<div>Manage the user accounts here.</div>
 						</div>
 
-						<AddUsers />
+						<div className='flex flex-row w-1/2 h-16 items-center justify-end gap-3'>
+							<CusSearch
+								curSearch={curSearch}
+								setCurSearch={setCurSearch}
+								label={'name'}
+							/>
+							<CusSort
+								sortOrder={sortOrder}
+								setSortOrder={setSortOrder}
+							/>
+							<AddUsers />
+						</div>
 					</div>
 					<CusTable
 						columns={columns}
@@ -69,6 +88,7 @@ const UserRegistrationPage = () => {
 					/>
 				)}
 			</div>
+			<CusNotif prompt={prompt} />
 		</div>
 	);
 };

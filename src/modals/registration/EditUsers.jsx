@@ -76,6 +76,7 @@ const EditUsers = ({ curRow, setEditUser, showEditUser }) => {
 				setImageFile={setImageFile}
 				open={showEditUser}
 				form={editForm}
+				user={true}
 			/>
 		</div>
 	);

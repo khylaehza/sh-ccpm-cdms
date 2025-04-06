@@ -10,7 +10,7 @@ export const CusPrimButton = ({
 }) => {
 	return (
 		<button
-			className={`bg-secondary text-${text} focus:border-black w-${w} mt-2 outline-none border-none `}
+			className={`bg-secondary text-${text} focus:border-black w-${w}  outline-none border-none h-12	`}
 			onClick={onClick}
 			type={type}
 		>

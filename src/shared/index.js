@@ -5,3 +5,6 @@ export { default as CusModal } from './CusModal';
 export { default as CusSelect } from './CusSelect';
 export { default as CusAlert } from './CusAlert';
 export { default as CusModalInfo } from './CusModalInfo';
+export { default as CusSearch } from './CusSearch';
+export { default as CusSort } from './CusSort';
+export { default as CusNotif } from './CusNotif';

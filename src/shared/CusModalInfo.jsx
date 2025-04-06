@@ -1,9 +1,8 @@
-const CusModalInfo = ({ title, data, open, setOpen }) => {
+import moment from 'moment';
+const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 	const onClose = () => {
 		setOpen(false);
 	};
-
-	console.log(title);
 
 	return (
 		<div>
@@ -56,16 +55,17 @@ const CusModalInfo = ({ title, data, open, setOpen }) => {
 																		key={
 																			key
 																		}
-																		className='flex flex-col gap-1'
+																		className='flex gap-1'
 																	>
 																		<span className='text-sm font-semibold text-gray-700'>
-																			{
-																				key
-																			}{' '}
 																			{key.includes(
 																				'date'
 																			) &&
-																				`(date)`}
+																				`DATE`}
+																			{key.includes(
+																				'amt'
+																			) &&
+																				`Amount`}
 																			:
 																		</span>
 																		<span className='text-sm text-gray-900'>
@@ -81,6 +81,18 @@ const CusModalInfo = ({ title, data, open, setOpen }) => {
 											);
 										}
 									)}
+									<h4 className='text-md font-bold text-gray-800'>
+										Date Modified
+									</h4>
+									<div className='grid grid-cols-2 gap-4'>
+										<div className='flex gap-1'>
+											<span className='text-sm text-gray-900'>
+												{moment(dateModified).format(
+													'YYYY-MM-DD HH:mm:ss'
+												)}
+											</span>
+										</div>
+									</div>
 								</div>
 							</div>
 
