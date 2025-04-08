@@ -44,36 +44,37 @@ const GeneralDepPage = () => {
 	const department = curUser?.department?.toLowerCase();
 
 	if (department === 'finance') {
-		columns = columns.filter((col) => col.key !== 'quotation');
+		// columns = columns.filter((col) => col.key !== 'quotation');
 		fields = Object.fromEntries(
 			Object.entries(fields).filter(([key]) => key !== 'Quotation')
 		);
 	} else if (department === 'product development') {
-		columns = columns.filter((col) =>
-			[
-				'created_at',
-				'project_name',
-				'project_briefing',
-				'client_po',
-				'pur_of_raw_materials',
-			].includes(col.key)
-		);
+		// columns = columns.filter((col) =>
+		// 	[
+		// 		'created_at',
+		// 		'project_name',
+		// 		'project_briefing',
+		// 		'client_po',
+		// 		'pur_of_raw_materials',
+		// 	].includes(col.key)
+		// );
 		fields = {
 			Created: ['created_at'],
 			'Project Name': ['project_name'],
-			'Project Briefing': ['project_briefing'],
-			'Client PO': ['client_po'],
-			'Purchase of Raw Materials': ['pur_of_raw_materials'],
+			'Client PO': ['client_date'],
+			'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
 		};
 	} else if (department === 'product and activation') {
-		columns = columns.filter((col) =>
-			['created_at', 'project_name', 'client_po', 'dr'].includes(col.key)
-		);
+		// columns = columns.filter((col) =>
+		// 	['created_at', 'project_name', 'client_date', 'dr'].includes(
+		// 		col.key
+		// 	)
+		// );
 		fields = {
 			Created: ['created_at'],
 			'Project Name': ['project_name'],
-			'Client PO': ['client_po'],
-			DR: ['dr'],
+			'Client P.O': ['client_date'],
+			DR: ['dr_date'],
 		};
 	}
 

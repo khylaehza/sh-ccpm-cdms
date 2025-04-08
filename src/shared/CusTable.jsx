@@ -22,7 +22,7 @@ const CusTable = ({
 	const [img, setImg] = useState('');
 	const [openImg, setOpenImg] = useState(false);
 	const [deleteOpen, setOpenDelete] = useState(false);
-	const { deleteItem } = useData();
+	const { deleteItem, curUser } = useData();
 	const [itemId, setItemId] = useState(null);
 	const [tblName, setTableName] = useState(null);
 	const [imageUrl, setImageUrl] = useState(null);
@@ -92,7 +92,7 @@ const CusTable = ({
 	return (
 		<div
 			className='overflow-x-auto overflow-y-auto'
-			style={{ maxHeight: '80vh', maxWidth: '100%' }}
+			style={{ maxHeight: '58vh', maxWidth: '100%' }}
 		>
 			<table className='table-fixed w-full'>
 				<thead>
@@ -218,28 +218,33 @@ const CusTable = ({
 												<span>Edit</span>
 											</button>
 
-											<button
-												onClick={() => onDelete(row)}
-												className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex gap-1 items-center justify-center w-full'
-											>
-												<svg
-													xmlns='http://www.w3.org/2000/svg'
-													width='16'
-													height='16'
-													fill='none'
-													viewBox='0 0 24 24'
-													stroke='currentColor'
-													strokeWidth='2'
-													className='w-4 h-4'
+											{curUser?.role ===
+												'Super Admin' && (
+												<button
+													onClick={() =>
+														onDelete(row)
+													}
+													className='bg-red-200 p-2 rounded-full hover:bg-red-300 flex gap-1 items-center justify-center w-full'
 												>
-													<path
-														strokeLinecap='round'
-														strokeLinejoin='round'
-														d='M6 18L18 6M6 6l12 12'
-													/>
-												</svg>
-												<span>Del</span>
-											</button>
+													<svg
+														xmlns='http://www.w3.org/2000/svg'
+														width='16'
+														height='16'
+														fill='none'
+														viewBox='0 0 24 24'
+														stroke='currentColor'
+														strokeWidth='2'
+														className='w-4 h-4'
+													>
+														<path
+															strokeLinecap='round'
+															strokeLinejoin='round'
+															d='M6 18L18 6M6 6l12 12'
+														/>
+													</svg>
+													<span>Del</span>
+												</button>
+											)}
 										</div>
 									</td>
 								)}

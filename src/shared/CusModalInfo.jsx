@@ -66,11 +66,23 @@ const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 																				'amt'
 																			) &&
 																				`Amount`}
-																			:
+																			{key ===
+																				'created_at' ||
+																			key ===
+																				'project_name'
+																				? ''
+																				: ':'}
 																		</span>
 																		<span className='text-sm text-gray-900'>
-																			{value ||
-																				'No Data Available'}
+																			{key ===
+																			'created_at'
+																				? moment(
+																						value
+																					).format(
+																						'YYYY-MM-DD HH:mm:ss'
+																					)
+																				: value ||
+																					'No Data Available'}
 																		</span>
 																	</div>
 																);
