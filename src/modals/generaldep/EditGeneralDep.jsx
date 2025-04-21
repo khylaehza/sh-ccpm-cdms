@@ -71,11 +71,14 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 			purchase_amt: curRow.purchase_amt || '',
 			dr: curRow.dr || null,
 			dr_date: curRow.dr_date || '',
+			dr_amt: curRow.dr_amt || '',
 			sl: curRow.sl || null,
 			sl_date: curRow.sl_date || '',
 			cr: curRow.cr || null,
 			cr_date: curRow.cr_date || '',
 			cr_amt: curRow.cr_amt || '',
+			approved_amt: curRow.approved_amt || '',
+			approved_date: curRow.approved_date || '',
 			modified_date: moment().format(),
 		}),
 		[curRow]
@@ -108,6 +111,7 @@ const EditGeneralDep = ({ curRow, setEditGeneralDep, showEditGeneralDep }) => {
 					handleFileUpload={handlePdfChange}
 					fileNames={fileNames}
 					department={curUser?.department.toLowerCase()}
+					role={curUser?.role.toLowerCase()}
 				/>
 			}
 			title='Edit Project'

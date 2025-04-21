@@ -17,18 +17,18 @@ const GeneralDepPage = () => {
 	let columns = [
 		{ key: 'created_at', label: 'Created At', type: 'time' },
 		{ key: 'project_name', label: 'Project Name', type: 'title' },
-		{ key: 'project_briefing', label: 'Project Briefing', type: 'pdf' },
-		{ key: 'costing', label: 'Costing', type: 'pdf' },
-		{ key: 'quotation', label: 'Quotation', type: 'pdf' },
-		{ key: 'client_po', label: 'Client PO', type: 'pdf' },
-		{
-			key: 'pur_of_raw_materials',
-			label: 'Purchase of Raw Materials',
-			type: 'pdf',
-		},
-		{ key: 'dr', label: 'DR', type: 'pdf' },
-		{ key: 'sl', label: 'SL', type: 'pdf' },
-		{ key: 'cr', label: 'CR', type: 'pdf' },
+		{ key: 'project_briefing', label: 'Project Brief', type: 'pdf' },
+		{ key: 'costing', label: 'Costing Form', type: 'pdf' },
+		{ key: 'quotation', label: 'Cost Estimate', type: 'pdf' },
+		{ key: 'client_po', label: 'Client P.O', type: 'pdf' },
+		// {
+		// 	key: 'pur_of_raw_materials',
+		// 	label: 'Purchase of Raw Materials',
+		// 	type: 'pdf',
+		// },
+		{ key: 'dr', label: 'Delivery Receipt', type: 'pdf' },
+		{ key: 'sl', label: 'Sales Invoice', type: 'pdf' },
+		{ key: 'cr', label: 'Collection Receipt', type: 'pdf' },
 	];
 
 	let fields = {

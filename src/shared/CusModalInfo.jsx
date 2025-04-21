@@ -37,7 +37,7 @@ const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 									</button>
 								</div>
 
-								<div className='mt-4 space-y-4'>
+								{/* <div className='mt-4 space-y-4'>
 									{Object.entries(data).map(
 										([group, values]) => {
 											return (
@@ -83,6 +83,111 @@ const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 																					)
 																				: value ||
 																					'No Data Available'}
+																		</span>
+																	</div>
+																);
+															}
+														)}
+													</div>
+												</div>
+											);
+										}
+									)}
+									<h4 className='text-md font-bold text-gray-800'>
+										Date Modified
+									</h4>
+									<div className='grid grid-cols-2 gap-4'>
+										<div className='flex gap-1'>
+											<span className='text-sm text-gray-900'>
+												{moment(dateModified).format(
+													'YYYY-MM-DD HH:mm:ss'
+												)}
+											</span>
+										</div>
+									</div>
+								</div> */}
+								<div className='mt-4 space-y-4'>
+									{Object.entries(data).map(
+										([group, values]) => {
+											return (
+												<div key={group}>
+													<h4 className='text-md font-bold text-gray-800'>
+														{group}
+													</h4>
+													<div className='grid grid-cols-2 gap-4'>
+														{Object.entries(
+															values
+														).map(
+															([key, value]) => {
+																const isAmount =
+																	key
+																		.toLowerCase()
+																		.includes(
+																			'amt'
+																		);
+																const isDate =
+																	key
+																		.toLowerCase()
+																		.includes(
+																			'date'
+																		);
+																const isCreatedAt =
+																	key ===
+																	'created_at';
+																const isProjectName =
+																	key ===
+																	'project_name';
+
+																let displayValue =
+																	value ||
+																	'No Data Available';
+
+																if (
+																	isAmount &&
+																	!isNaN(
+																		value
+																	)
+																) {
+																	displayValue = `₱${parseFloat(
+																		value
+																	).toLocaleString(
+																		'en-PH',
+																		{
+																			minimumFractionDigits: 2,
+																			maximumFractionDigits: 2,
+																		}
+																	)}`;
+																} else if (
+																	isCreatedAt
+																) {
+																	displayValue =
+																		moment(
+																			value
+																		).format(
+																			'YYYY-MM-DD HH:mm:ss'
+																		);
+																}
+
+																return (
+																	<div
+																		key={
+																			key
+																		}
+																		className='flex gap-1'
+																	>
+																		<span className='text-sm font-semibold text-gray-700'>
+																			{isDate &&
+																				'DATE'}
+																			{isAmount &&
+																				'Amount'}
+																			{!isCreatedAt &&
+																				!isProjectName &&
+																				':'}
+																		</span>
+																		<span className='text-sm text-gray-900'>
+																			{
+																				displayValue
+																			}
 																		</span>
 																	</div>
 																);
