@@ -137,7 +137,12 @@ const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 																const isProjectName =
 																	key ===
 																	'project_name';
-
+																const isQtyName =
+																	key ===
+																	'client_qty';
+																const isCosting =
+																	key ===
+																	'costing_specifies';
 																let displayValue =
 																	value ||
 																	'No Data Available';
@@ -179,7 +184,11 @@ const CusModalInfo = ({ title, data, open, setOpen, dateModified }) => {
 																			{isDate &&
 																				'DATE'}
 																			{isAmount &&
-																				'Amount'}
+																				'AMOUNT'}
+																			{isQtyName &&
+																				'QUANTITY'}
+																			{isCosting &&
+																				'SPECIFICS'}
 																			{!isCreatedAt &&
 																				!isProjectName &&
 																				':'}

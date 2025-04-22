@@ -127,7 +127,7 @@ const GeneralDepForm = ({
 								touch={form.touched.costing_date}
 								type='date'
 							/>
-							<CusInput
+							{/* <CusInput
 								name='costing_amt'
 								label='Total Amount'
 								value={form.values.costing_amt}
@@ -137,7 +137,7 @@ const GeneralDepForm = ({
 								touch={form.touched.costing_amt}
 								type='number'
 								placeholder={'0'}
-							/>
+							/> */}
 						</div>
 					)}
 

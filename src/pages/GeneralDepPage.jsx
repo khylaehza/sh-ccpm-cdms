@@ -32,52 +32,52 @@ const GeneralDepPage = () => {
 	];
 
 	let fields = {
-		Costing: ['costing_date'],
-		Quotation: ['quotation_date'],
+		'Costing Form': ['costing_date'],
+		'Cost Estimate': ['quotation_date'],
 		'Client P.O': ['client_date'],
-		'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
-		DR: ['dr_date'],
-		SL: ['sl_date'],
-		CR: ['cr_date', 'cr_amt'],
+		'Total Amount of Approved PR': ['purchase_date', 'purchase_amt'],
+		'Delivery Receipt': ['dr_date'],
+		'Sales Invoice': ['sl_date'],
+		'Collection Receipt': ['cr_date', 'cr_amt'],
 	};
 
 	const department = curUser?.department?.toLowerCase();
+	const role = curUser?.role?.toLowerCase();
 
 	if (department === 'finance') {
-		// columns = columns.filter((col) => col.key !== 'quotation');
-		fields = Object.fromEntries(
-			Object.entries(fields).filter(([key]) => key !== 'Quotation')
-		);
-	} else if (department === 'product development') {
-		// columns = columns.filter((col) =>
-		// 	[
-		// 		'created_at',
-		// 		'project_name',
-		// 		'project_briefing',
-		// 		'client_po',
-		// 		'pur_of_raw_materials',
-		// 	].includes(col.key)
-		// );
 		fields = {
-			Created: ['created_at'],
-			'Project Name': ['project_name'],
-			'Client PO': ['client_date'],
-			'Purchase of Raw Materials': ['purchase_date', 'purchase_amt'],
+			'Total Amount of Approved PR': ['approved_date', 'approved_amt'],
+			'Sales Invoice': ['sl_date'],
+		};
+	} else if (department === 'product development') {
+		fields = {
+			'Costing Form': ['costing_date'],
+		};
+	} else if (department === 'marketing') {
+		fields = {
+			'Cost Estimate': ['quotation_date'],
+			'Client P.O': ['client_date', 'client_qty', 'costing_specifies'],
 		};
 	} else if (department === 'product and activation') {
-		// columns = columns.filter((col) =>
-		// 	['created_at', 'project_name', 'client_date', 'dr'].includes(
-		// 		col.key
-		// 	)
-		// );
 		fields = {
-			Created: ['created_at'],
-			'Project Name': ['project_name'],
-			'Client P.O': ['client_date'],
-			DR: ['dr_date'],
+			'Delivery Receipt': ['dr_date'],
+		};
+	} else if (department === 'general' && role === 'super admin') {
+		fields = {
+			'Costing Form': ['costing_date'],
+			'Cost Estimate': ['quotation_date'],
+			'Client P.O': ['client_date', 'client_qty', 'costing_specifies'],
+			'Total Amount of Approved PR': ['approved_date', 'approved_amt'],
+			'Delivery Receipt': ['dr_date'],
+			'Sales Invoice': ['sl_date'],
+			'Collection Receipt': ['cr_date', 'cr_amt'],
+		};
+	} else if (department === 'general' && role != 'super admin') {
+		fields = {
+			'Client P.O': ['client_date', 'client_qty', 'costing_specifies'],
+			'Collection Receipt': ['cr_date', 'cr_amt'],
 		};
 	}
-
 	const rows =
 		generalDep?.length > 0
 			? generalDep
