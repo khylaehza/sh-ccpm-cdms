@@ -29,7 +29,7 @@ const Header = ({ toggleSideNav }) => {
 				className='w-auto h-28 cursor-pointer'
 				onClick={handleLogoClick}
 			/>
-			<div className='text-lg font-bold'>Centralized Data Management</div>
+			<div className='text-lg font-bold'>Client Relation Management</div>
 			<div className='flex flex-row items-center gap-4'>
 				<img
 					src={curUser?.image || 'https://via.placeholder.com/40'}
